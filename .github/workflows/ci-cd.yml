@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+    tags:
+      - 'v*'
 
 jobs:
   build:
@@ -21,7 +23,7 @@ jobs:
 
       - name: Get version tag
         id: vars
-        run: echo "VERSION_TAG=latest-${GITHUB_SHA::7}" >> $GITHUB_ENV
+        run: echo "VERSION_TAG=${GITHUB_REF##*/}" >> $GITHUB_ENV
 
       - name: Build and Push Docker image
         run: |
