@@ -25,7 +25,6 @@ jobs:
 
       - name: Build and Push Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/postbox: \
-          ${{ env.VERSION_TAG }} .
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/postbox: \
-          ${{ env.VERSION_TAG }}
+          TAG=${{ secrets.DOCKER_HUB_USERNAME }}/postbox:${{ env.VERSION_TAG }}"
+          docker build -t "$TAG";
+          docker push "$TAG";
