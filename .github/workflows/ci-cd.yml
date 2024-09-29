@@ -25,6 +25,7 @@ jobs:
 
       - name: Build and Push Docker image
         run: |
-          TAG=${{ secrets.DOCKER_HUB_USERNAME }}/postbox:${{ env.VERSION_TAG }}"
-          docker build -t "$TAG";
-          docker push "$TAG";
+          TAG="${{secrets.DOCKER_HUB_USERNAME }}/postbox:${{ env.VERSION_TAG}}"
+          echo "Building Docker image with tag: $TAG"
+          docker build -t "$TAG" .
+          docker push "$TAG" .
