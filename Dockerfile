@@ -1,10 +1,10 @@
-# Stage 1: Build Stage
-FROM python:3.11-slim AS builder
+# Use the official Python image from the Docker Hub
+FROM python:3.11-slim
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Install system dependencies for building
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
     && apt-get clean \
@@ -16,32 +16,21 @@ RUN git clone https://github.com/pallets/flask.git
 # Change directory to the examples/tutorial
 WORKDIR /app/flask/examples/tutorial
 
-# Checkout the latest tagged version
+# Checkout the latest tagged version (replace `latest-tag` with the desired tag)
 RUN git fetch --tags && \
     git checkout $(git describe --tags `git rev-list --tags --max-count=1`)
 
 # Create a virtual environment
 RUN python3 -m venv .venv
 
-# Upgrade pip and install Flaskr and test dependencies
+# Activate the virtual environment and install Flaskr
 RUN . .venv/bin/activate && \
-    pip install --upgrade pip && \
     pip install -e . && \
     pip install '.[test]'
-
-# Stage 2: Runtime Stage
-FROM python:3.11-slim AS runtime
-
-# Set the working directory in the runtime container
-WORKDIR /app
-
-# Copy the virtual environment and Flask application from the builder stage
-COPY --from=builder /app/flask/examples/tutorial/.venv .venv
-COPY --from=builder /app/flask/examples/tutorial/flaskr ./flaskr
 
 # Expose port 5000
 EXPOSE 5000
 
-# Command to run the Flask application
-CMD ["/bin/bash", "-c", ". .venv/bin/activate && flask --app flaskr run --debug --host=0.0.0.0"]
+# Command to initialize the database and run the application
+CMD ["/bin/bash", "-c", ". .venv/bin/activate && flask --app flaskr init-db && flask --app flaskr run --debug --host=0.0.0.0"]
 
