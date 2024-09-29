@@ -19,7 +19,13 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
+      - name: Get version tag
+        id: vars
+        run: echo "VERSION_TAG=latest-${GITHUB_SHA::7}" >> $GITHUB_ENV
+
       - name: Build and Push Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/postbox:latest .
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/postbox:latest
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/postbox: \
+          ${{ env.VERSION_TAG }} .
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/postbox: \
+          ${{ env.VERSION_TAG }}
