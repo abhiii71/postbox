@@ -28,4 +28,4 @@ jobs:
           TAG="${{secrets.DOCKER_HUB_USERNAME }}/postbox:${{ env.VERSION_TAG}}"
           echo "Building Docker image with tag: $TAG"
           docker build -t "$TAG" .
-          docker push "$TAG" .
+          docker push "$TAG"
