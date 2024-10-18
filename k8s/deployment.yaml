@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postbox-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: postbox
+  template:
+    metadata:
+      labels:
+        app: postbox
+    spec:
+      containers:
+        - name: postbox-container
+          image: helloabhii/postbox
+          ports:
+            - containerPort: 5000
